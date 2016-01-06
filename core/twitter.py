@@ -40,10 +40,12 @@ def get_target_tweets(target_user_name):
     return tweets
 
 
-def troll(replies, interval=60, target_user_name='dAn_1k'):
+def troll(replies, interval, target_user_name):
+    interval = interval or 60
+    target_user_name = target_user_name or 'dan_1k'
     for tweet in get_target_tweets(target_user_name):
-        api.update_status('@{0} {1}'.format(target_user_name, random.choice(replies)), tweet.id)
-    sleep(interval * 60)
+        api.update_status('@{0}\n{1}'.format(target_user_name, random.choice(replies)), tweet.id)
+    sleep(float(interval) * 60)
 
 
 def get_replies(replies_file):
@@ -58,18 +60,12 @@ def get_args():
     parser.add_argument('-i', '--interval', help='Check interval in minutes', required=False)
     return vars(parser.parse_args())
 
+
 if __name__ == '__main__':
     api = get_api()
     replies_file = get_args()['file']
-    target_user = get_args()['user']
+    target_user_name = get_args()['user']
     interval = get_args()['interval']
     replies = get_replies(replies_file)
     while True:
-        if target_user and interval:
-            troll(replies, interval=interval, target_user_name=target_user)
-        elif target_user and not interval:
-            troll(replies, target_user_name=target_user)
-        elif interval and not target_user:
-            troll(replies, interval=interval)
-        else:
-            troll(replies)
+        troll(replies, interval, target_user_name)
