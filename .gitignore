@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+.idea/
+
+/core/last_check_time.txt
+/core/auth_credentials.json
+
+*.log
+
