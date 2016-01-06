@@ -7,9 +7,10 @@ __pycache__/
 *.so
 
 .idea/
+/core/solovyov-trolling.sh
 
 /core/last_check_time.txt
 /core/auth_credentials.json
 
-*.log
+core/info.log
 

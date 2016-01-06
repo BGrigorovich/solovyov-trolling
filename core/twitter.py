@@ -3,9 +3,27 @@ import json
 import random
 import codecs
 import argparse
+import logging
 from datetime import datetime
 from time import sleep
 import tweepy
+
+
+def str_now():
+    return datetime.now().strftime('%a %b %d %H:%M:%S %Y')
+
+
+def get_replies(replies_file):
+    with codecs.open(replies_file, encoding='utf-8', errors='skip') as f:
+        return [reply for reply in f]
+
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--file', help='File with list of replies', required=True)
+    parser.add_argument('-u', '--user', help='User that will receive replies', required=False)
+    parser.add_argument('-i', '--interval', help='Check interval in minutes', required=False)
+    return vars(parser.parse_args())
 
 
 def get_last_check_time():
@@ -45,27 +63,18 @@ def troll(replies, interval, target_user_name):
     target_user_name = target_user_name or 'dan_1k'
     for tweet in get_target_tweets(target_user_name):
         api.update_status('@{0}\n{1}'.format(target_user_name, random.choice(replies)), tweet.id)
+        logging.info('{0} replying to tweet #{1}'.format(str_now(), tweet.id))
     sleep(float(interval) * 60)
 
 
-def get_replies(replies_file):
-    with codecs.open(replies_file, encoding='utf-8', errors='skip') as f:
-        return [reply for reply in f]
-
-
-def get_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--file', help='File with list of replies', required=True)
-    parser.add_argument('-u', '--user', help='User that will receive replies', required=False)
-    parser.add_argument('-i', '--interval', help='Check interval in minutes', required=False)
-    return vars(parser.parse_args())
-
-
 if __name__ == '__main__':
+    logging.basicConfig(filename='info.log', level=logging.INFO)
     api = get_api()
     replies_file = get_args()['file']
     target_user_name = get_args()['user']
     interval = get_args()['interval']
     replies = get_replies(replies_file)
+    logging.info('{0} start script'.format(str_now()))
     while True:
+        logging.info('{0} checking for new tweets'.format(str_now()))
         troll(replies, interval, target_user_name)
