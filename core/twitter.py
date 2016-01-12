@@ -69,6 +69,7 @@ def troll(replies, interval, target_user_name):
 
 if __name__ == '__main__':
     logging.basicConfig(filename='info.log', level=logging.INFO)
+    logging.basicConfig(filename='error.log', level=logging.ERROR)
     api = get_api()
     replies_file = get_args()['file']
     target_user_name = get_args()['user']
