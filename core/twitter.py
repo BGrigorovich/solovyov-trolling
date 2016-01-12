@@ -57,14 +57,15 @@ def get_target_tweets(target_user_name):
     set_last_check_time()
     return tweets
 
-
-def troll(replies, interval, target_user_name):
-    interval = interval or 60
-    target_user_name = target_user_name or 'dan_1k'
-    for tweet in get_target_tweets(target_user_name):
-        api.update_status('@{0}\n{1}'.format(target_user_name, random.choice(replies)), tweet.id)
-        logging.info('{0} replying to tweet #{1}'.format(str_now(), tweet.id))
-    sleep(float(interval) * 60)
+def troll_default(default_interval, default_username):
+    def troll(replies, interval, target_user_name):
+        interval = interval or default_interval
+        target_user_name = target_user_name or default_username
+        for tweet in get_target_tweets(target_user_name):
+            api.update_status('@{0}\n{1}'.format(target_user_name, random.choice(replies)), tweet.id)
+            logging.info('{0} replying to tweet #{1}'.format(str_now(), tweet.id))
+        sleep(float(interval) * 60)
+    return troll
 
 
 if __name__ == '__main__':
@@ -76,6 +77,7 @@ if __name__ == '__main__':
     interval = get_args()['interval']
     replies = get_replies(replies_file)
     logging.info('{0} start script'.format(str_now()))
+    solovyov_troll = troll_default(default_interval=60, default_username='dan_1k')
     while True:
         logging.info('{0} checking for new tweets'.format(str_now()))
-        troll(replies, interval, target_user_name)
+        solovyov_troll(replies, interval, target_user_name)
