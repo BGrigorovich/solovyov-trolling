@@ -13,4 +13,5 @@ __pycache__/
 /core/auth_credentials.json
 
 core/info.log
+core/error.log
 
