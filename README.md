@@ -17,4 +17,4 @@ Script for sending reply on each new non-retweet and non-reply tweet of specifie
     
 3) Run script from terminal
 
-    python twitter.py -f <file_with_replies> [-i=60|-u=dAn_1k]
+    python twitter.py -f <file_with_replies> -a <json file with auth credentials> [-u=<file with user you want to troll> default:dAn_1k]
